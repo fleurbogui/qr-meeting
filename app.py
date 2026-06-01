@@ -202,9 +202,6 @@ def new_meeting():
         db.session.add(meeting)
         db.session.commit()
 
-        # Générer le QR code
-        _generate_qr(meeting)
-
         flash(f'Réunion "{title}" créée avec succès !', 'success')
         return redirect(url_for('meeting_detail', meeting_id=meeting.id))
 
@@ -267,10 +264,6 @@ def toggle_meeting(meeting_id):
 @login_required
 def delete_meeting(meeting_id):
     meeting = Meeting.query.get_or_404(meeting_id)
-    # Supprimer le QR code
-    qr_path = os.path.join(app.config['QR_FOLDER'], f'qr_{meeting.token}.png')
-    if os.path.exists(qr_path):
-        os.remove(qr_path)
     db.session.delete(meeting)
     db.session.commit()
     flash('Réunion supprimée.', 'success')
@@ -462,29 +455,44 @@ def api_stats():
 
 
 # ─────────────────────────────────────────
-# QR CODE GENERATOR
+# QR CODE — génération dynamique
 # ─────────────────────────────────────────
 
-def _generate_qr(meeting):
-    base_url = os.environ.get('BASE_URL', 'http://localhost:5000')
-    url = f"{base_url}/register/{meeting.token}"
+def _make_qr_bytes(url):
+    """Génère un QR code en mémoire à partir d'une URL et retourne les bytes PNG."""
     qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=10, border=4)
     qr.add_data(url)
     qr.make(fit=True)
     img = qr.make_image(fill_color="#1a1a2e", back_color="white")
-    path = os.path.join(app.config['QR_FOLDER'], f'qr_{meeting.token}.png')
-    img.save(path)
-    return path
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    buf.seek(0)
+    return buf
+
+
+@app.route('/meetings/<int:meeting_id>/qr.png')
+@login_required
+def meeting_qr_image(meeting_id):
+    """Sert le QR code comme image inline (utilisé dans <img src>)."""
+    meeting = Meeting.query.get_or_404(meeting_id)
+    base_url = request.host_url.rstrip('/')
+    url = f"{base_url}/register/{meeting.token}"
+    return send_file(_make_qr_bytes(url), mimetype='image/png')
 
 
 @app.route('/meetings/<int:meeting_id>/qr')
 @login_required
 def download_qr(meeting_id):
+    """Télécharge le QR code en PNG."""
     meeting = Meeting.query.get_or_404(meeting_id)
-    path = os.path.join(app.config['QR_FOLDER'], f'qr_{meeting.token}.png')
-    if not os.path.exists(path):
-        _generate_qr(meeting)
-    return send_file(path, as_attachment=True, download_name=f'qr_{meeting.title[:30]}.png')
+    base_url = request.host_url.rstrip('/')
+    url = f"{base_url}/register/{meeting.token}"
+    return send_file(
+        _make_qr_bytes(url),
+        mimetype='image/png',
+        as_attachment=True,
+        download_name=f'qr_{meeting.title[:30]}.png'
+    )
 
 
 # ─────────────────────────────────────────
