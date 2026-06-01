@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Déjà inscrit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #f7f7fb; color: #1a1a2e; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .card { background: #fff; border-radius: 16px; padding: 40px 32px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+    .icon { width: 64px; height: 64px; background: rgba(255,193,7,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; }
+    h1 { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; margin-bottom: 10px; }
+    p { color: #8888a8; font-size: 0.9rem; line-height: 1.5; }
+    .highlight { color: #6c63ff; font-weight: 600; }
+    hr { border: none; border-top: 1px solid #e5e5f0; margin: 16px 0; }
+    .info-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 3px 0; }
+    .info-label { color: #8888a8; }
+    .btn { display: inline-block; margin-top: 20px; padding: 12px 24px; background: #6c63ff; color: #fff; border-radius: 10px; text-decoration: none; font-family: 'Syne', sans-serif; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">⚠️</div>
+    <h1>Déjà inscrit(e) !</h1>
+    <p>Votre présence à <span class="highlight">{{ meeting.title }}</span> a déjà été enregistrée.</p>
+    <hr>
+    <div class="info-row"><span class="info-label">Nom</span><span>{{ participant.first_name }} {{ participant.last_name }}</span></div>
+    <div class="info-row"><span class="info-label">Email</span><span>{{ participant.email }}</span></div>
+    <div class="info-row"><span class="info-label">Enregistré le</span><span>{{ participant.scanned_at.strftime('%d/%m/%Y à %H:%M') }}</span></div>
+  </div>
+</body>
+</html>

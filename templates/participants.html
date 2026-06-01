@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Participants — QRMeet{% endblock %}
+{% block page_title %}Tous les participants{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom:20px">
+  <form method="GET" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <input type="text" name="q" value="{{ search }}" placeholder="Rechercher par nom, email, entreprise…" style="max-width:360px">
+    <button type="submit" class="btn btn-primary">Rechercher</button>
+    {% if search %}<a href="{{ url_for('all_participants') }}" class="btn btn-outline">Effacer</a>{% endif %}
+    <a href="{{ url_for('export_all_participants', q=search) }}" class="btn btn-outline btn-sm" style="margin-left:auto">
+      ↓ Exporter tout (CSV)
+    </a>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">
+      {{ participants|length }} participant{{ 's' if participants|length > 1 else '' }}
+      {% if search %} pour « {{ search }} »{% endif %}
+    </span>
+  </div>
+  {% if participants %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nom complet</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Entreprise / Poste</th>
+          <th>Réunion</th>
+          <th>Heure de scan</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in participants %}
+        <tr>
+          <td style="font-weight:500">{{ p.first_name }} {{ p.last_name }}</td>
+          <td><a href="mailto:{{ p.email }}" style="color:var(--accent);text-decoration:none">{{ p.email }}</a></td>
+          <td style="color:var(--text-muted)">{{ p.phone or '—' }}</td>
+          <td>
+            {% if p.company or p.position %}
+            <div>{{ p.company }}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">{{ p.position }}</div>
+            {% else %}—{% endif %}
+          </td>
+          <td>
+            <a href="{{ url_for('meeting_detail', meeting_id=p.meeting.id) }}" style="color:var(--text-muted);text-decoration:none;font-size:0.85rem">
+              {{ p.meeting.title[:35] }}{% if p.meeting.title|length > 35 %}…{% endif %}
+            </a>
+          </td>
+          <td style="white-space:nowrap;color:var(--text-muted)">{{ p.scanned_at.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('delete_participant', participant_id=p.id) }}"
+                  onsubmit="return confirm('Supprimer ce participant ?')">
+              <button type="submit" class="btn btn-danger btn-sm">✕</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    <p>{% if search %}Aucun résultat pour « {{ search }} »{% else %}Aucun participant enregistré.{% endif %}</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
