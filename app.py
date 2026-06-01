@@ -443,14 +443,38 @@ def register(token):
 @login_required
 def api_stats():
     from sqlalchemy import func
-    # Participants par jour (30 derniers jours)
     daily = db.session.query(
         func.date(Participant.scanned_at).label('day'),
         func.count(Participant.id).label('cnt')
     ).group_by(func.date(Participant.scanned_at)).order_by('day').limit(30).all()
-
     return jsonify({
         'daily': [{'date': str(r.day), 'count': r.cnt} for r in daily]
+    })
+
+
+@app.route('/api/dashboard-stats')
+@login_required
+def api_dashboard_stats():
+    total_participants = Participant.query.count()
+    total_meetings = Meeting.query.count()
+    active_meetings = Meeting.query.filter_by(is_active=True).count()
+    inactive_meetings = Meeting.query.filter_by(is_active=False).count()
+    avg = round(total_participants / total_meetings, 1) if total_meetings > 0 else 0
+
+    meetings = Meeting.query.order_by(Meeting.scheduled_at.desc()).limit(10).all()
+    meeting_stats = [{
+        'id': m.id,
+        'title': m.title[:25] + ('…' if len(m.title) > 25 else ''),
+        'count': m.participant_count,
+    } for m in meetings]
+
+    return jsonify({
+        'total_participants': total_participants,
+        'total_meetings': total_meetings,
+        'active_meetings': active_meetings,
+        'inactive_meetings': inactive_meetings,
+        'avg_participants': avg,
+        'meeting_stats': meeting_stats,
     })
 
 

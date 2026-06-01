@@ -4,7 +4,9 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Émargement — {{ meeting.title }}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #f7f7fb; --surface: #fff; --border: #e5e5f0;
@@ -13,7 +15,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: var(--bg); color: var(--text);
       min-height: 100vh; padding: 20px;
     }
@@ -24,14 +26,14 @@
       padding: 28px 28px 24px;
     }
     .header-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 6px; }
-    .header h1 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; line-height: 1.2; }
+    .header h1 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; line-height: 1.2; }
     .header-meta { margin-top: 10px; font-size: 0.82rem; opacity: 0.8; display: flex; flex-direction: column; gap: 3px; }
     .form-card {
       background: var(--surface); border: 1px solid var(--border);
       border-top: none; border-radius: 0 0 16px 16px; padding: 28px;
     }
     .section-title {
-      font-family: 'Syne', sans-serif; font-size: 0.8rem;
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem;
       text-transform: uppercase; letter-spacing: 0.08em;
       color: var(--text-muted); margin-bottom: 14px; margin-top: 20px;
     }
@@ -42,7 +44,7 @@
     input {
       width: 100%; padding: 12px 14px;
       background: var(--bg); border: 1.5px solid var(--border);
-      border-radius: 10px; color: var(--text); font-family: 'DM Sans', sans-serif;
+      border-radius: 10px; color: var(--text); font-family: 'Inter', sans-serif;
       font-size: 0.9rem; transition: border-color 0.15s;
     }
     input:focus { outline: none; border-color: var(--accent); background: #fff; }
@@ -50,7 +52,7 @@
     .btn-submit {
       width: 100%; padding: 14px;
       background: var(--accent); border: none; border-radius: 10px;
-      color: #fff; font-family: 'Syne', sans-serif;
+      color: #fff; font-family: 'Space Grotesk', sans-serif;
       font-size: 1rem; font-weight: 700; cursor: pointer;
       margin-top: 20px; transition: background 0.15s;
     }
