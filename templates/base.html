@@ -41,6 +41,7 @@
       position: fixed;
       top: 0; left: 0; bottom: 0;
       z-index: 100;
+      transition: transform 0.25s ease;
     }
     .sidebar-logo {
       padding: 28px 24px 20px;
@@ -231,10 +232,63 @@
       transition: opacity 0.4s;
     }
     .stat-value { transition: color 0.5s; }
+
+    /* --- HAMBURGER --- */
+    .menu-btn {
+      display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: 8px; background: var(--surface2);
+      border: 1px solid var(--border); cursor: pointer; gap: 5px;
+      margin-right: 12px;
+    }
+    .menu-btn span {
+      display: block; width: 18px; height: 2px;
+      background: var(--text); border-radius: 2px;
+    }
+
+    /* --- OVERLAY --- */
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); z-index: 150;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.open { display: block; }
+    .sidebar.open { transform: translateX(0) !important; z-index: 200; }
+
+    /* --- TABLET (≤ 1024px) --- */
+    @media (max-width: 1024px) {
+      .sidebar { width: 200px; }
+      .main { margin-left: 200px; }
+      .topbar { padding: 14px 22px; }
+      .content { padding: 22px; }
+    }
+
+    /* --- MOBILE (≤ 768px) --- */
     @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
+      .sidebar { transform: translateX(-100%); width: 260px; }
+      .sidebar.open { transform: translateX(0); }
       .main { margin-left: 0; }
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .topbar { padding: 12px 16px; position: sticky; top: 0; z-index: 90; }
+      .content { padding: 16px; }
+      .menu-btn { display: flex; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stat-card { padding: 14px; }
+      .stat-value { font-size: 1.6rem; }
+      .card { padding: 16px; }
+      .topbar h2 { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    }
+
+    /* --- PETIT MOBILE (≤ 480px) --- */
+    @media (max-width: 480px) {
+      .content { padding: 12px; }
+      .stats-grid { gap: 10px; }
+      .topbar h2 { font-size: 0.9rem; }
+      th { font-size: 0.65rem; padding: 8px; }
+      td { padding: 9px 8px; font-size: 0.82rem; }
+      .btn { padding: 8px 14px; font-size: 0.82rem; }
+      .card { padding: 12px; }
     }
   </style>
   {% block extra_css %}{% endblock %}
@@ -272,9 +326,15 @@
       </a>
     </div>
   </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
   <div class="main">
     <div class="topbar">
-      <h2>{% block page_title %}{% endblock %}</h2>
+      <div style="display:flex;align-items:center;min-width:0">
+        <button class="menu-btn" id="menu-btn" aria-label="Ouvrir le menu">
+          <span></span><span></span><span></span>
+        </button>
+        <h2>{% block page_title %}{% endblock %}</h2>
+      </div>
       <div class="admin-badge">
         <div class="avatar">{{ session.admin_name[0]|upper }}</div>
         <span>{{ session.admin_name }}</span>
@@ -295,5 +355,28 @@
     {% block public_content %}{% endblock %}
   {% endif %}
   <div id="toast-container"></div>
+  <script>
+  (function () {
+    var btn = document.getElementById('menu-btn');
+    var sidebar = document.querySelector('.sidebar');
+    var overlay = document.getElementById('sidebar-overlay');
+    if (!btn || !sidebar || !overlay) return;
+    function open() {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    btn.addEventListener('click', open);
+    overlay.addEventListener('click', close);
+    document.querySelectorAll('.nav-item, .sidebar-footer a').forEach(function (el) {
+      el.addEventListener('click', close);
+    });
+  })();
+  </script>
 </body>
 </html>

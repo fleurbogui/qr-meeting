@@ -4,12 +4,12 @@
 
 {% block content %}
 <div class="card" style="margin-bottom:20px">
-  <form method="GET" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-    <input type="text" name="q" value="{{ search }}" placeholder="Rechercher par nom, email, entreprise…" style="max-width:360px">
+  <form method="GET" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <input type="text" name="q" value="{{ search }}" placeholder="Nom, email, entreprise…" style="flex:1;min-width:160px">
     <button type="submit" class="btn btn-primary">Rechercher</button>
     {% if search %}<a href="{{ url_for('all_participants') }}" class="btn btn-outline">Effacer</a>{% endif %}
-    <a href="{{ url_for('export_all_participants', q=search) }}" class="btn btn-outline btn-sm" style="margin-left:auto">
-      ↓ Exporter tout (CSV)
+    <a href="{{ url_for('export_all_participants', q=search) }}" class="btn btn-outline btn-sm" style="margin-left:auto;white-space:nowrap">
+      ↓ Exporter CSV
     </a>
   </form>
 </div>

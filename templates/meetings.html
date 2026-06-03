@@ -5,10 +5,10 @@
 {% block content %}
 <!-- FILTRES -->
 <div class="card" style="margin-bottom:20px">
-  <form method="GET" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-    <input type="text" name="q" value="{{ search }}" placeholder="Rechercher par titre, lieu, description…" style="max-width:320px">
-    <select name="status" style="width:auto;padding:10px 14px">
-      <option value="" {% if not status %}selected{% endif %}>Tous les statuts</option>
+  <form method="GET" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <input type="text" name="q" value="{{ search }}" placeholder="Rechercher…" style="flex:1;min-width:160px">
+    <select name="status" style="width:auto;padding:10px 14px;flex-shrink:0">
+      <option value="" {% if not status %}selected{% endif %}>Tous statuts</option>
       <option value="active" {% if status == 'active' %}selected{% endif %}>Ouvertes</option>
       <option value="closed" {% if status == 'closed' %}selected{% endif %}>Fermées</option>
     </select>
@@ -16,7 +16,7 @@
     {% if search or status %}
     <a href="{{ url_for('meetings_list') }}" class="btn btn-outline">Réinitialiser</a>
     {% endif %}
-    <a href="{{ url_for('new_meeting') }}" class="btn btn-primary" style="margin-left:auto">
+    <a href="{{ url_for('new_meeting') }}" class="btn btn-primary" style="margin-left:auto;white-space:nowrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Nouvelle réunion
     </a>
