@@ -49,7 +49,7 @@
       <tbody>
         {% for m in meetings %}
         <tr>
-          <td>
+          <td data-label="Réunion">
             <a href="{{ url_for('meeting_detail', meeting_id=m.id) }}" style="color:var(--text);text-decoration:none;font-weight:500">
               {{ m.title }}
             </a>
@@ -59,16 +59,16 @@
             </div>
             {% endif %}
           </td>
-          <td style="white-space:nowrap">{{ m.scheduled_at.strftime('%d/%m/%Y %H:%M') }}</td>
-          <td style="color:var(--text-muted)">{{ m.location or '—' }}</td>
-          <td><span class="badge badge-count">{{ m.participant_count }}</span></td>
-          <td>
+          <td data-label="Date">{{ m.scheduled_at.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td data-label="Lieu" style="color:var(--text-muted)">{{ m.location or '—' }}</td>
+          <td data-label="Participants"><span class="badge badge-count">{{ m.participant_count }}</span></td>
+          <td data-label="Statut">
             <span class="badge {{ 'badge-active' if m.is_active else 'badge-inactive' }}">
               {{ 'Ouvert' if m.is_active else 'Fermé' }}
             </span>
           </td>
           <td>
-            <div style="display:flex;gap:6px">
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
               <a href="{{ url_for('meeting_detail', meeting_id=m.id) }}" class="btn btn-outline btn-sm">Voir</a>
               <a href="{{ url_for('edit_meeting', meeting_id=m.id) }}" class="btn btn-outline btn-sm">✎</a>
               <form method="POST" action="{{ url_for('toggle_meeting', meeting_id=m.id) }}" style="display:inline">

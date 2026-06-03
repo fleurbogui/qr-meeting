@@ -96,21 +96,21 @@
       <tbody>
         {% for p in participants %}
         <tr>
-          <td style="color:var(--text-muted)">{{ loop.index }}</td>
-          <td style="font-weight:500">{{ p.first_name }} {{ p.last_name }}</td>
-          <td><a href="mailto:{{ p.email }}" style="color:var(--accent);text-decoration:none">{{ p.email }}</a></td>
-          <td style="color:var(--text-muted)">{{ p.phone or '—' }}</td>
-          <td>
+          <td data-label="#" style="color:var(--text-muted)">{{ loop.index }}</td>
+          <td data-label="Nom" style="font-weight:500">{{ p.first_name }} {{ p.last_name }}</td>
+          <td data-label="Email"><a href="mailto:{{ p.email }}" style="color:var(--accent);text-decoration:none">{{ p.email }}</a></td>
+          <td data-label="Tél." style="color:var(--text-muted)">{{ p.phone or '—' }}</td>
+          <td data-label="Entreprise">
             {% if p.company or p.position %}
             <div>{{ p.company }}</div>
             <div style="font-size:0.75rem;color:var(--text-muted)">{{ p.position }}</div>
             {% else %}—{% endif %}
           </td>
-          <td style="white-space:nowrap;color:var(--text-muted)">{{ p.scanned_at.strftime('%d/%m %H:%M') }}</td>
+          <td data-label="Heure" style="color:var(--text-muted)">{{ p.scanned_at.strftime('%d/%m %H:%M') }}</td>
           <td>
             <form method="POST" action="{{ url_for('delete_participant', participant_id=p.id) }}"
                   onsubmit="return confirm('Supprimer ce participant ?')">
-              <button type="submit" class="btn btn-danger btn-sm">✕</button>
+              <button type="submit" class="btn btn-danger btn-sm">✕ Supprimer</button>
             </form>
           </td>
         </tr>
